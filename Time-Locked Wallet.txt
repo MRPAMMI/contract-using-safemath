@@ -1,0 +1,40 @@
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+
+contract TimeLockedWallet {
+
+
+    using SafeMath for uint256;
+
+    address payable public owner;
+    uint256 public releaseTime;
+    uint256 public balance;
+
+    constructor(uint256 _releaseTime) payable {
+        require(_releaseTime > block.timestamp, "Release time must be in the future");
+        owner = payable(msg.sender);
+        releaseTime = _releaseTime;
+        balance = msg.value;
+    }
+
+    function withdraw() public {
+        require(msg.sender == owner, "Only the owner can withdraw funds");
+        require(block.timestamp >= releaseTime, "Funds cannot be withdrawn before the release time");
+        uint256 amount = balance;
+        balance = 0;
+        owner.transfer(amount);
+    }
+
+    function increaseLockTime(uint256 _newReleaseTime) public {
+        require(msg.sender == owner, "Only the owner can adjust the release time");
+        require(_newReleaseTime > releaseTime, "New release time must be after the current release time");
+        releaseTime = _newReleaseTime;
+    }
+
+    function decreaseLockTime(uint256 _newReleaseTime) public {
+        require(msg.sender == owner, "Only the owner can adjust the release time");
+        require(_newReleaseTime < releaseTime, "New release time must be before the current release time");
+        releaseTime = _newReleaseTime;
+    }
+}
