@@ -1,0 +1,9 @@
+pragma solidity ^0.8.0;
+
+contract MyContract {
+    // other contract code here
+    
+    fallback() external payable {
+        revert("This contract does not accept Ether.");
+    }
+}

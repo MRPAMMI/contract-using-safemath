@@ -1,0 +1,10 @@
+pragma solidity ^0.8.0;
+
+contract MyContract {
+    uint public lockTime;
+
+    function increaseLockTime(uint _extraTime) public {
+        require(_extraTime != 0, "Extra time must not be zero.");
+        lockTime += _extraTime;
+    }
+}

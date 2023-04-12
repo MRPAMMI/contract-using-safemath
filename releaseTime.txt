@@ -1,0 +1,25 @@
+pragma solidity ^0.8.0;
+
+contract MyContract {
+    uint public releaseTime;
+    uint public lockTime;
+
+    event LockTimeIncreased(uint newLockTime);
+    event LockTimeDecreased(uint newLockTime);
+
+    function increaseLockTime(uint _extraTime) public {
+        require(_extraTime != 0, "Extra time must not be zero.");
+        require(releaseTime > block.timestamp, "Release time must be in the future.");
+        lockTime += _extraTime;
+        emit LockTimeIncreased(lockTime);
+    }
+
+    function decreaseLockTime(uint _reduceTime) public {
+        require(_reduceTime != 0, "Reduce time must not be zero.");
+        require(releaseTime > block.timestamp, "Release time must be in the future.");
+        if (lockTime >= _reduceTime) {
+            lockTime -= _reduceTime;
+            emit LockTimeDecreased(lockTime);
+        }
+    }
+}

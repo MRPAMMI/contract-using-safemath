@@ -1,0 +1,12 @@
+pragma solidity ^0.8.0;
+
+contract MyContract {
+    uint public lockTime;
+
+    function decreaseLockTime(uint _reduceTime) public {
+        require(_reduceTime != 0, "Reduce time must not be zero.");
+        if (lockTime >= _reduceTime) {
+            lockTime -= _reduceTime;
+        }
+    }
+}
